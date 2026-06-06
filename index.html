@@ -12,6 +12,7 @@
   --p1c:#1e6bbd;--p1l:#70b8f8;--p2c:#c47a1a;--p2l:#f0b050;
   --txt:#dce8f0;--dim:#7a98b0;--bdr:#1a2d42;--bdr2:#223448;
   --row-alt:rgba(255,255,255,.025);--row-hover:rgba(200,165,62,.07);
+  --green:#1a7a4a;--greenl:#4dd98a;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -36,7 +37,8 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);
 }
 .hdr-org{font-size:clamp(.8rem,2vw,.95rem);font-weight:400;color:var(--dim)}
 .hdr-col{font-size:clamp(1rem,3vw,1.35rem);font-weight:700;color:var(--txt);margin:.15rem 0}
-.hdr-dept{font-size:clamp(.95rem,2.5vw,1.15rem);font-weight:800;color:var(--gold)}
+.hdr-dept{font-size:clamp(.95rem,2.5vw,1.15rem);font-weight:800;color:var(--gold);margin:.1rem 0}
+.hdr-title{font-size:clamp(.85rem,2.2vw,1rem);font-weight:600;color:var(--txt);margin:.1rem 0}
 .hdr-sub{font-size:clamp(.72rem,1.8vw,.85rem);color:var(--dim);margin-top:.4rem}
 .hdr-dates{
   display:inline-flex;gap:1rem;margin-top:.5rem;
@@ -99,6 +101,8 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);
 .btn-gold:hover{background:var(--gold2)}
 .btn-out{background:transparent;border:1.5px solid var(--bdr2);color:var(--dim)}
 .btn-out:hover{border-color:var(--gold);color:var(--txt)}
+.btn-green{background:rgba(26,122,74,.25);border:1.5px solid rgba(77,217,138,.3);color:var(--greenl)}
+.btn-green:hover{background:rgba(26,122,74,.45);border-color:var(--greenl)}
 
 .res-inf{font-size:.78rem;color:var(--dim);margin-right:auto}
 .res-inf strong{color:var(--gold);font-weight:800}
@@ -150,6 +154,161 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);
   color:var(--dim);font-size:.9rem;
 }
 
+/* ── STUDENT SCHEDULE BUILDER ── */
+.builder-section{
+  background:var(--surf);border-bottom:2px solid rgba(77,217,138,.2);
+  padding:1rem 1.2rem;
+}
+.builder-toggle{
+  display:flex;align-items:center;gap:.6rem;cursor:pointer;
+  padding:.55rem .9rem;border-radius:8px;background:rgba(26,122,74,.15);
+  border:1.5px solid rgba(77,217,138,.25);width:100%;text-align:right;
+  font-family:'Cairo',sans-serif;color:var(--greenl);font-weight:700;font-size:.88rem;
+  transition:all .2s;
+}
+.builder-toggle:hover{background:rgba(26,122,74,.3);border-color:var(--greenl)}
+.builder-toggle .arrow{transition:transform .3s;font-size:.75rem;margin-right:auto}
+.builder-toggle.open .arrow{transform:rotate(180deg)}
+.builder-body{display:none;margin-top:.9rem;}
+.builder-body.open{display:block}
+.builder-steps{display:flex;flex-direction:column;gap:1rem}
+
+/* Step labels */
+.step-hdr{
+  display:flex;align-items:center;gap:.5rem;margin-bottom:.55rem;
+}
+.step-num{
+  background:rgba(77,217,138,.2);color:var(--greenl);border:1px solid rgba(77,217,138,.35);
+  border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;
+  font-size:.68rem;font-weight:900;flex-shrink:0;
+}
+.step-lbl{font-weight:700;font-size:.82rem;color:var(--txt)}
+.step-hint{font-size:.72rem;color:var(--dim);margin-right:.3rem}
+
+/* Course pills grid */
+.course-pills{
+  display:flex;flex-wrap:wrap;gap:.35rem;
+  padding:.6rem;background:var(--card);border-radius:8px;border:1px solid var(--bdr2);
+  max-height:200px;overflow-y:auto;
+}
+.course-pills::-webkit-scrollbar{width:5px}
+.course-pills::-webkit-scrollbar-thumb{background:var(--goldX);border-radius:3px}
+.cpill{
+  padding:.22rem .65rem;border-radius:2rem;font-size:.72rem;font-weight:600;
+  font-family:'Cairo',sans-serif;cursor:pointer;transition:all .18s;
+  border:1.5px solid var(--bdr2);background:transparent;color:var(--dim);
+  white-space:nowrap;
+}
+.cpill:hover{border-color:var(--greenl);color:var(--txt)}
+.cpill.chosen{background:rgba(26,122,74,.25);border-color:var(--greenl);color:var(--greenl);font-weight:800}
+
+/* Section pickers */
+.section-pickers{display:flex;flex-direction:column;gap:.6rem}
+.sec-card{
+  background:var(--card);border:1px solid var(--bdr2);border-radius:8px;
+  overflow:hidden;
+}
+.sec-card-hdr{
+  background:linear-gradient(90deg,rgba(26,122,74,.2),transparent);
+  padding:.45rem .8rem;border-bottom:1px solid var(--bdr2);
+  display:flex;align-items:center;gap:.5rem;
+  font-weight:700;font-size:.78rem;color:var(--greenl);
+}
+.sec-card-hdr .day-tag{
+  font-size:.65rem;font-weight:600;color:var(--dim);
+  background:rgba(255,255,255,.05);padding:.1rem .45rem;border-radius:.25rem;
+  border:1px solid var(--bdr2);margin-right:auto;
+}
+.sec-options{
+  display:flex;flex-wrap:wrap;gap:.35rem;padding:.55rem .65rem;
+}
+.sec-opt{
+  display:flex;align-items:center;gap:.4rem;cursor:pointer;
+  padding:.3rem .6rem;border-radius:6px;border:1.5px solid var(--bdr2);
+  background:transparent;transition:all .18s;min-width:200px;flex:1;
+}
+.sec-opt:hover{border-color:rgba(77,217,138,.5);background:rgba(26,122,74,.08)}
+.sec-opt.selected{border-color:var(--greenl);background:rgba(26,122,74,.2)}
+.sec-opt input[type=radio]{accent-color:var(--greenl);width:13px;height:13px;cursor:pointer;flex-shrink:0}
+.sec-opt-info{display:flex;flex-direction:column;gap:.05rem}
+.sec-num{font-weight:800;color:var(--txt);font-size:.78rem}
+.sec-meta{font-size:.66rem;color:var(--dim);line-height:1.4}
+.sec-room{color:var(--gold);font-weight:700;font-size:.72rem}
+
+/* Builder actions bar */
+.builder-actions{
+  display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;
+  padding:.6rem 0 .3rem;
+  border-top:1px solid var(--bdr2);margin-top:.5rem;
+}
+.sel-summary{font-size:.75rem;color:var(--dim);margin-right:auto}
+.sel-summary strong{color:var(--greenl)}
+
+/* Personal schedule result */
+.personal-sched{display:none;margin-top:.9rem}
+.personal-sched.show{display:block}
+.ps-hdr{
+  background:linear-gradient(135deg,rgba(26,122,74,.3) 0%,rgba(26,122,74,.1) 100%);
+  border:1px solid rgba(77,217,138,.3);border-radius:10px;
+  padding:.7rem 1rem;margin-bottom:.7rem;
+}
+.ps-hdr-top{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:.5rem;margin-bottom:.35rem;
+}
+.ps-title{font-weight:900;color:var(--greenl);font-size:.95rem}
+.ps-export-btns{display:flex;flex-wrap:wrap;gap:.4rem}
+.ps-info{font-size:.73rem;color:var(--dim)}
+.ps-info strong{color:var(--txt)}
+
+/* Schedule card for printing / export */
+#schedCard{
+  background:#fff;color:#111;border-radius:8px;overflow:hidden;
+  font-family:'Cairo',sans-serif;direction:rtl;
+  min-width:640px;
+}
+.sc-hdr{
+  background:#1a3a6a;color:#fff;padding:.7rem 1.1rem;
+  text-align:center;
+}
+.sc-hdr h3{font-size:1rem;font-weight:800;margin-bottom:.15rem}
+.sc-hdr p{font-size:.75rem;opacity:.85;margin:0}
+.sc-body{padding:.6rem}
+.sc-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.sc-table thead th{
+  background:#1a3a6a;color:#fff;padding:.45rem .6rem;
+  text-align:center;font-weight:700;font-size:.75rem;white-space:nowrap;
+}
+.sc-table tbody tr{border-bottom:1px solid #dde}
+.sc-table tbody tr:nth-child(even){background:#f6f9ff}
+.sc-table td{padding:.4rem .6rem;text-align:center;vertical-align:middle}
+.sc-table .td-crs{text-align:right;font-weight:600}
+.sc-table .td-rm{font-weight:800;color:#1a3a6a}
+.sc-table .td-per1{color:#1e6bbd;font-weight:700;font-size:.73rem}
+.sc-table .td-per2{color:#c47a1a;font-weight:700;font-size:.73rem}
+.sc-foot{
+  border-top:1px solid #dde;padding:.45rem 1rem;text-align:center;
+  font-size:.72rem;color:#666;background:#f8faff;
+}
+.conflict-warn{
+  background:rgba(200,60,60,.15);border:1px solid rgba(200,60,60,.3);
+  color:#f08080;padding:.5rem .8rem;border-radius:6px;font-size:.78rem;
+  margin-bottom:.5rem;
+}
+
+/* ── FOOTER ─────────────────── */
+/* ── FOOTER ─────────────────── */
+.pg-footer{
+  background:var(--surf);border-top:1px solid var(--bdr);
+  text-align:center;padding:1rem 1.5rem;
+  font-size:.78rem;color:var(--dim);
+}
+.pg-footer .credit{
+  display:inline-block;color:var(--gold);font-weight:700;font-size:.82rem;
+  border:1px solid var(--goldX);padding:.25rem 1.2rem;border-radius:2rem;
+  background:rgba(200,165,62,.07);margin-top:.3rem;
+}
+
 /* ── PRINT ───────────────────── */
 @media print{
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -161,6 +320,7 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);
   }
   .pg-hdr *{color:#fff !important}
   .stats{display:none !important}
+  .builder-section{display:none !important}
   .tbl-wrap{padding:0}
   .sched{font-size:8pt;border:1pt solid #ddd}
   .sched thead th{
@@ -177,12 +337,20 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);
   .pbadge{background:#eee !important;color:#333 !important;border:0.5pt solid #999 !important}
   .print-hdr{display:block !important}
   .print-foot{display:block !important}
-  .hdr-org,.hdr-col,.hdr-dept,.hdr-sub,.hdr-dates{color:#fff !important}
+  .hdr-org,.hdr-col,.hdr-dept,.hdr-title,.hdr-sub,.hdr-dates{color:#fff !important}
+  .pg-footer{display:none !important}
+  /* Personal schedule print */
+  body.print-personal .tbl-wrap{display:none !important}
+  body.print-personal .pg-hdr .hdr-title{display:none !important}
+  .personal-print-area{display:none}
+  body.print-personal .personal-print-area{display:block !important}
 }
 .print-hdr,.print-foot{display:none}
 .print-hdr{text-align:center;padding:.5rem;border-bottom:1pt solid #ccc;margin-bottom:.5rem;font-size:9pt}
 .print-foot{text-align:center;margin-top:1rem;font-size:8pt;color:#555;border-top:0.5pt solid #ccc;padding-top:.4rem}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -191,11 +359,11 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);
 
 <!-- ─ PAGE HEADER ─ -->
 <header class="pg-hdr">
-  <div class="hdr-badge">قسم تقنية الأعمال</div>
+  <div class="hdr-badge">الفصل الدراسي الثاني 1447هـ</div>
   <div class="hdr-org">المؤسسة العامة للتدريب التقني والمهني</div>
   <div class="hdr-col">الكلية التقنية بأبها</div>
-  <div class="hdr-dept">جدول قاعات ولجان الاختبارات النهائية</div>
-  <div class="hdr-sub">الفصل الدراسي الثاني</div>
+  <div class="hdr-dept">قسم تقنية الأعمال</div>
+  <div class="hdr-title">جدول قاعات ولجان الاختبارات النهائية</div>
   <div class="hdr-dates">
     <span>ذو الحجة 1447هـ</span>
     <span>يونيو 2026م</span>
@@ -287,6 +455,67 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);
   </div>
 </div>
 
+<!-- ─ STUDENT SCHEDULE BUILDER ─ -->
+<div class="builder-section no-print">
+  <button class="builder-toggle" id="builderToggle" onclick="toggleBuilder()">
+    <span>📋</span>
+    <span>بناء جدول اختبارات المتدرب الشخصي</span>
+    <span class="arrow">▼</span>
+  </button>
+  <div class="builder-body" id="builderBody">
+
+    <div class="builder-steps">
+      <!-- STEP 1: Choose courses -->
+      <div>
+        <div class="step-hdr">
+          <div class="step-num">١</div>
+          <span class="step-lbl">اختر موادك الدراسية</span>
+          <span class="step-hint">— انقر على المادة لإضافتها</span>
+        </div>
+        <div class="course-pills" id="coursePills"></div>
+      </div>
+
+      <!-- STEP 2: Choose section per course -->
+      <div id="sectionStep" style="display:none">
+        <div class="step-hdr">
+          <div class="step-num">٢</div>
+          <span class="step-lbl">اختر شعبتك لكل مادة</span>
+          <span class="step-hint">— اختر شعبة واحدة لكل مادة</span>
+        </div>
+        <div class="section-pickers" id="sectionPickers"></div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="builder-actions">
+      <button class="btn btn-green" onclick="buildPersonalSched()">📊 عرض جدولي</button>
+      <button class="btn btn-out" onclick="clearAllCourses()">مسح الكل</button>
+      <span class="sel-summary">المواد المختارة: <strong id="selCount">0</strong> | الشعب المحددة: <strong id="secCount">0</strong></span>
+    </div>
+
+    <!-- RESULT -->
+    <div class="personal-sched" id="personalSched">
+      <div class="ps-hdr">
+        <div class="ps-hdr-top">
+          <span class="ps-title">📅 جدولي الشخصي للاختبارات</span>
+          <div class="ps-export-btns">
+            <button class="btn btn-gold" onclick="printPersonal()">🖨 طباعة</button>
+            <button class="btn btn-green" onclick="exportImage()">🖼 تصدير صورة</button>
+            <button class="btn btn-out" onclick="exportPDF()">📄 تصدير PDF</button>
+          </div>
+        </div>
+        <div class="ps-info" id="psInfo"></div>
+      </div>
+      <div id="conflictWarn"></div>
+      <!-- The printable/exportable card -->
+      <div id="schedCard"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─ TABLE ─ -->
+
 <!-- ─ TABLE ─ -->
 <div class="tbl-wrap">
   <table class="sched" id="sched">
@@ -310,11 +539,19 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);
 <!-- ─ PRINT FOOTER ─ -->
 <div class="print-foot" id="printFoot">
   طُبع من جدول الاختبارات النهائية | قسم تقنية الأعمال | الكلية التقنية بأبها
+  <br>إعداد أ. كليب بن أحمد ضيف الله الزهراني
 </div>
+
+<!-- ─ PAGE FOOTER ─ -->
+<footer class="pg-footer no-print">
+  جدول الاختبارات النهائية | الفصل الدراسي الثاني 1447هـ | الكلية التقنية بأبها
+  <br>
+  <span class="credit">إعداد أ. كليب بن أحمد ضيف الله الزهراني</span>
+</footer>
 
 <script>
 /* ─── DATA ─────────────────────────────────────────── */
-const D = [{"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11216", "trainer": "حسن مانع آل عمير", "room": "305", "committee": "5", "count": "20", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11218", "trainer": "ظافر سعيد آل صنيج", "room": "302", "committee": "2", "count": "21", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11221", "trainer": "محمد علي عسيري", "room": "306", "committee": "6", "count": "28", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11222", "trainer": "علي احمد المغيدي", "room": "303", "committee": "3", "count": "18", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11227", "trainer": "عبدالله سعد العسيري", "room": "308", "committee": "7", "count": "15", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11234", "trainer": "عبدالرحمن سعيد آل حمحوم", "room": "304", "committee": "4", "count": "18", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إجراءات السكرتارية (ادار 222)", "section": "11238", "trainer": "عبدالرحمن عبدالله الرعيني", "room": "310", "committee": "9", "count": "21", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11239", "trainer": "عبدالله سعد العسيري", "room": "308", "committee": "7", "count": "20", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11247", "trainer": "علي احمد المغيدي", "room": "303", "committee": "3", "count": "17", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مراجعة (محسب 266)", "section": "11299", "trainer": "عبد السلام عبدالله القحطاني", "room": "312", "committee": "11", "count": "29", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مراجعة (محسب 266)", "section": "11300", "trainer": "عبد السلام عبدالله القحطاني", "room": "313", "committee": "12", "count": "26", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إجراءات السكرتارية (ادار 222)", "section": "11307", "trainer": "عبدالرحمن عبدالله الرعيني", "room": "311", "committee": "10", "count": "18", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إجراءات السكرتارية (ادار 222)", "section": "11324", "trainer": "إبراهيم سعيد الشهراني", "room": "311", "committee": "10", "count": "14", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إجراءات السكرتارية (ادار 222)", "section": "11328", "trainer": "إبراهيم سعيد الشهراني", "room": "309", "committee": "8", "count": "21", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11351", "trainer": "علي احمد المغيدي", "room": "301", "committee": "1", "count": "20", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11354", "trainer": "حسن مانع آل عمير", "room": "304", "committee": "4", "count": "17", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "موضوعات مختارة إدارة (إدار 285)", "section": "11254", "trainer": "محمد علي عسيري", "room": "304", "committee": "4", "count": "24", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "موضوعات مختارة إدارة (إدار 285)", "section": "11261", "trainer": "محمد علي عسيري", "room": "301", "committee": "1", "count": "20", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "محاسبة منشآت مالية (محسب 251)", "section": "11270", "trainer": "عبد السلام عبدالله القحطاني", "room": "305", "committee": "5", "count": "19", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "محاسبة منشآت مالية (محسب 251)", "section": "11275", "trainer": "عبد السلام عبدالله القحطاني", "room": "306", "committee": "6", "count": "17", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "موضوعات مختارة إدارة (إدار 285)", "section": "11331", "trainer": "محمد علي عسيري", "room": "302", "committee": "2", "count": "21", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "موضوعات مختارة إدارة (إدار 285)", "section": "11346", "trainer": "محمد علي عسيري", "room": "303", "committee": "3", "count": "16", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الوقت (إدار 241)", "section": "11248", "trainer": "ظافر محمد الشمراني", "room": "303", "committee": "3", "count": "23", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة حكومية (محسب 131)", "section": "11250", "trainer": "عبدالله سعيد القحطاني", "room": "305", "committee": "5", "count": "21", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة حكومية (محسب 131)", "section": "11256", "trainer": "عبدالله سعيد القحطاني", "room": "305", "committee": "6", "count": "13", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة حكومية (محسب 131)", "section": "11258", "trainer": "عبدالله سعيد القحطاني", "room": "306", "committee": "6", "count": "19", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الوقت (إدار 241)", "section": "11306", "trainer": "ظافر محمد الشمراني", "room": "302", "committee": "2", "count": "29", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الوقت (إدار 241)", "section": "11329", "trainer": "ظافر محمد الشمراني", "room": "301", "committee": "1", "count": "31", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الوقت (إدار 241)", "section": "11330", "trainer": "ظافر محمد الشمراني", "room": "304", "committee": "4", "count": "25", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة حكومية (محسب 131)", "section": "68436", "trainer": "الحسين سالم آل عثمان", "room": "308", "committee": "7", "count": "24", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "لغة انجليزية (انجل 111)", "section": "-", "trainer": "-", "room": "مبنى 14", "committee": "-", "count": "-", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "لغة انجليزية (انجل 113)", "section": "-", "trainer": "-", "room": "مبنى 14", "committee": "-", "count": "-", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11217", "trainer": "ظافر عبدالله الشهري", "room": "303", "committee": "3", "count": "20", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11219", "trainer": "ظافر عبدالله الشهري", "room": "302", "committee": "2", "count": "19", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11220", "trainer": "ظافر عبدالله الشهري", "room": "301", "committee": "1", "count": "13", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11223", "trainer": "سعيد عبدالرحمن الشهري", "room": "306", "committee": "6", "count": "17", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11229", "trainer": "ظافر عبدالله الشهري", "room": "302", "committee": "2", "count": "15", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11231", "trainer": "ظافر عبدالله الشهري", "room": "303", "committee": "3", "count": "15", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11237", "trainer": "ظافر عبدالله الشهري", "room": "301", "committee": "1", "count": "21", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11243", "trainer": "سعيد عبدالرحمن الشهري", "room": "304", "committee": "4", "count": "13", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11352", "trainer": "سعيد عبدالرحمن الشهري", "room": "305", "committee": "5", "count": "18", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11356", "trainer": "سعيد عبدالرحمن الشهري", "room": "305", "committee": "5", "count": "10", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11357", "trainer": "سعيد عبدالرحمن الشهري", "room": "306", "committee": "6", "count": "8", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11358", "trainer": "سعيد عبدالرحمن الشهري", "room": "304", "committee": "4", "count": "17", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "ريادة الأعمال في المجال المالي (رياد 266)", "section": "11406", "trainer": "عبدالله يحيى آل فائع", "room": "308", "committee": "7", "count": "21", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "ريادة الأعمال في المجال المالي (رياد 266)", "section": "11410", "trainer": "عبدالله يحيى آل فائع", "room": "309", "committee": "8", "count": "21", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "2", "period_time": "08:00 - 10:00", "course": "دراسات اسلامية (اسلم 101)", "section": "-", "trainer": "-", "room": "مبنى 14", "committee": "-", "count": "-", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة الزكاة والدخل (محسب 261)", "section": "11287", "trainer": "عبدالعزيز هادي القحطاني", "room": "302", "committee": "2", "count": "16", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة الزكاة والدخل (محسب 261)", "section": "11293", "trainer": "كليب احمد الزهراني", "room": "301", "committee": "1", "count": "17", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة الزكاة والدخل (محسب 261)", "section": "11302", "trainer": "عبدالعزيز هادي القحطاني", "room": "302", "committee": "2", "count": "14", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "ريادة الأعمال في مجال الإدارة (رياد 262)", "section": "11400", "trainer": "حسن مانع آل عمير", "room": "304", "committee": "4", "count": "28", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "ريادة الأعمال في مجال الإدارة (رياد 262)", "section": "11402", "trainer": "عبدالرحمن عبدالله الرعيني", "room": "305", "committee": "5", "count": "23", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "ريادة الأعمال في مجال الإدارة (رياد 262)", "section": "11404", "trainer": "حسن مانع آل عمير", "room": "303", "committee": "3", "count": "23", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "رياضيات (رياض 101)", "section": "-", "trainer": "-", "room": "مبنى 14", "committee": "-", "count": "-", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "محاسبة باللغة الإنجليزية (محسب 275)", "section": "11289", "trainer": "علي محمد آل موسى", "room": "303", "committee": "2", "count": "24", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "محاسبة باللغة الإنجليزية (محسب 275)", "section": "11292", "trainer": "علي محمد آل موسى", "room": "301", "committee": "1", "count": "19", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "محاسبة باللغة الإنجليزية (محسب 275)", "section": "11304", "trainer": "علي محمد آل موسى", "room": "301", "committee": "1", "count": "15", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "لغة انجليزية (انجل 112)", "section": "-", "trainer": "-", "room": "مبنى 14", "committee": "-", "count": "-", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الإحصاء (احصا 101)", "section": "10435", "trainer": "خالد مداوي القحطاني", "room": "303", "committee": "3", "count": "22", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الإحصاء (احصا 101)", "section": "10438", "trainer": "خالد مداوي القحطاني", "room": "301", "committee": "1", "count": "17", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الإحصاء (احصا 101)", "section": "10439", "trainer": "خالد مداوي القحطاني", "room": "304", "committee": "4", "count": "26", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الإحصاء (احصا 101)", "section": "10444", "trainer": "خالد مداوي القحطاني", "room": "301", "committee": "1", "count": "14", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الإحصاء (احصا 101)", "section": "10451", "trainer": "خالد مداوي القحطاني", "room": "302", "committee": "2", "count": "24", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الإحصاء (احصا 101)", "section": "10467", "trainer": "خالد مداوي القحطاني", "room": "305", "committee": "5", "count": "24", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الإحصاء (احصا 101)", "section": "10474", "trainer": "خالد مداوي القحطاني", "room": "306", "committee": "6", "count": "21", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ المحاسبة", "section": "11226", "trainer": "حسن احمد السيد", "room": "303", "committee": "3", "count": "15", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ المحاسبة", "section": "11232", "trainer": "حسن احمد السيد", "room": "303", "committee": "3", "count": "14", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ المحاسبة", "section": "11241", "trainer": "حسن احمد السيد", "room": "302", "committee": "2", "count": "21", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ المحاسبة", "section": "11244", "trainer": "حسن احمد السيد", "room": "301", "committee": "2", "count": "12", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة متوسطة - 1 (محسب 111)", "section": "11249", "trainer": "خالد عبد الله آل محمد بن سعيد", "room": "304", "committee": "4", "count": "22", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 11/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ المحاسبة", "section": "11359", "trainer": "علي محمد عسيري", "room": "301", "committee": "1", "count": "15", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "اساسيات ريادة الأعمال (رياد 101)", "section": "10548", "trainer": "عضوان سعيد الأحمري", "room": "304", "committee": "4", "count": "19", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "اساسيات ريادة الأعمال (رياد 101)", "section": "10549", "trainer": "عضوان سعيد الأحمري", "room": "305", "committee": "5", "count": "21", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "اساسيات ريادة الأعمال (رياد 101)", "section": "10550", "trainer": "حسن مانع آل عمير", "room": "306", "committee": "6", "count": "27", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "اساسيات ريادة الأعمال (رياد 101)", "section": "10551", "trainer": "محمد علي عسيري", "room": "301", "committee": "1", "count": "21", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "اساسيات ريادة الأعمال (رياد 101)", "section": "10554", "trainer": "كليب احمد الزهراني", "room": "302", "committee": "2", "count": "20", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "اساسيات ريادة الأعمال (رياد 101)", "section": "10555", "trainer": "الحسين سالم آل عثمان", "room": "303", "committee": "3", "count": "22", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "إدارة وتقنيات المكاتب (إدار 121)", "section": "11240", "trainer": "محمد جبران آل سفران", "room": "301", "committee": "1", "count": "18", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "إدارة وتقنيات المكاتب (إدار 121)", "section": "11267", "trainer": "فيصل محمد القرني", "room": "302", "committee": "2", "count": "18", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "إدارة وتقنيات المكاتب (إدار 121)", "section": "11320", "trainer": "عبدالرحمن سعيد آل حمحوم", "room": "301", "committee": "1", "count": "12", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "إدارة وتقنيات المكاتب (إدار 121)", "section": "11336", "trainer": "عبدالرحمن سعيد آل حمحوم", "room": "302", "committee": "2", "count": "17", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "كتابة فنية (عربي 101)", "section": "-", "trainer": "-", "room": "مبنى 14", "committee": "-", "count": "-", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "الاتصالات الإدارية (إدار 111)", "section": "11224", "trainer": "تركي أحمد عسيري", "room": "310", "committee": "9", "count": "21", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة متوسطة - 1 (محسب 111)", "section": "11255", "trainer": "خالد عبد الله آل محمد بن سعيد", "room": "305", "committee": "6", "count": "17", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة متوسطة - 1 (محسب 111)", "section": "11257", "trainer": "خالد عبد الله آل محمد بن سعيد", "room": "305", "committee": "5", "count": "19", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "الإتصالات الإدارية (إدار 111)", "section": "11263", "trainer": "يحيى محمد عسيري", "room": "309", "committee": "8", "count": "22", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة متوسطة - 2 (محسب 212)", "section": "11269", "trainer": "علي محمد عسيري", "room": "308", "committee": "7", "count": "24", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة متوسطة - 2 (محسب 212)", "section": "11279", "trainer": "علي محمد عسيري", "room": "306", "committee": "7", "count": "11", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة متوسطة - 2 (محسب 212)", "section": "11286", "trainer": "علي محمد عسيري", "room": "306", "committee": "6", "count": "15", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "الاتصالات الإدارية (إدار 111)", "section": "11318", "trainer": "تركي أحمد عسيري", "room": "311", "committee": "10", "count": "25", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "الإتصالات الإدارية (إدار 111)", "section": "11332", "trainer": "يحيى محمد عسيري", "room": "309", "committee": "8", "count": "14", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "اساسيات ريادة الأعمال (رياد 101)", "section": "10553", "trainer": "كليب احمد الزهراني", "room": "308", "committee": "7", "count": "26", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "موضوعات مختارة (محاسبة) (محسب 285)", "section": "11291", "trainer": "علي محمد آل موسى", "room": "309", "committee": "8", "count": "29", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "موضوعات مختارة (محاسبة) (محسب 285)", "section": "11296", "trainer": "علي محمد آل موسى", "room": "310", "committee": "9", "count": "27", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "إدارة الموارد البشرية (إدار 231)", "section": "11312", "trainer": "عضوان سعيد الأحمري", "room": "312", "committee": "11", "count": "21", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "إدارة الموارد البشرية(إدار 231)", "section": "11317", "trainer": "عضوان سعيد الأحمري", "room": "311", "committee": "10", "count": "23", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "15/06/2026", "day": "الاثنين 15/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الجودة الشاملة (ادار 271)", "section": "11251", "trainer": "إبراهيم سعيد الشهراني", "room": "305", "committee": "5", "count": "19", "hijri": "29 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "15/06/2026", "day": "الاثنين 15/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الجودة الشاملة (ادار 271)", "section": "11259", "trainer": "عبدالرحمن عبدالله الرعيني", "room": "304", "committee": "4", "count": "25", "hijri": "29 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "15/06/2026", "day": "الاثنين 15/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة التكاليف (محسب 241)", "section": "11266", "trainer": "كليب احمد الزهراني", "room": "301", "committee": "1", "count": "12", "hijri": "29 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "15/06/2026", "day": "الاثنين 15/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة التكاليف (محسب 241)", "section": "11283", "trainer": "كليب احمد الزهراني", "room": "301", "committee": "1", "count": "18", "hijri": "29 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "15/06/2026", "day": "الاثنين 15/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الجودة الشاملة (ادار 271)", "section": "11327", "trainer": "عبدالرحمن عبدالله الرعيني", "room": "303", "committee": "3", "count": "21", "hijri": "29 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "15/06/2026", "day": "الاثنين 15/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الجودة الشاملة (ادار 271)", "section": "11345", "trainer": "إبراهيم سعيد الشهراني", "room": "302", "committee": "2", "count": "23", "hijri": "29 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "15/06/2026", "day": "الاثنين 15/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "سلوك وظيفي (اسلك 201)", "section": "-", "trainer": "-", "room": "مبنى 14", "committee": "-", "count": "-", "hijri": "29 ذو الحجة 1447هـ", "day_name": "الاثنين"}];
+const D = [{"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11216", "trainer": "حسن مانع آل عمير", "room": "305", "committee": "5", "count": "20", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11218", "trainer": "ظافر سعيد آل صنيج", "room": "302", "committee": "2", "count": "21", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11221", "trainer": "محمد علي عسيري", "room": "306", "committee": "6", "count": "28", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11222", "trainer": "علي احمد المغيدي", "room": "303", "committee": "3", "count": "18", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11227", "trainer": "عبدالله سعد العسيري", "room": "308", "committee": "7", "count": "15", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11234", "trainer": "عبدالرحمن سعيد آل حمحوم", "room": "304", "committee": "4", "count": "18", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إجراءات السكرتارية (ادار 222)", "section": "11238", "trainer": "عبدالرحمن عبدالله الرعيني", "room": "310", "committee": "9", "count": "21", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11239", "trainer": "عبدالله سعد العسيري", "room": "308", "committee": "7", "count": "20", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11247", "trainer": "علي احمد المغيدي", "room": "303", "committee": "3", "count": "17", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مراجعة (محسب 266)", "section": "11299", "trainer": "عبد السلام عبدالله القحطاني", "room": "312", "committee": "11", "count": "29", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مراجعة (محسب 266)", "section": "11300", "trainer": "عبد السلام عبدالله القحطاني", "room": "313", "committee": "12", "count": "26", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إجراءات السكرتارية (ادار 222)", "section": "11307", "trainer": "عبدالرحمن عبدالله الرعيني", "room": "311", "committee": "10", "count": "18", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إجراءات السكرتارية (ادار 222)", "section": "11324", "trainer": "إبراهيم سعيد الشهراني", "room": "311", "committee": "10", "count": "14", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إجراءات السكرتارية (ادار 222)", "section": "11328", "trainer": "إبراهيم سعيد الشهراني", "room": "309", "committee": "8", "count": "21", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11351", "trainer": "علي احمد المغيدي", "room": "301", "committee": "1", "count": "20", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ إدارة الأعمال (إدار 101)", "section": "11354", "trainer": "حسن مانع آل عمير", "room": "304", "committee": "4", "count": "17", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "موضوعات مختارة إدارة (إدار 285)", "section": "11254", "trainer": "محمد علي عسيري", "room": "304", "committee": "4", "count": "24", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "موضوعات مختارة إدارة (إدار 285)", "section": "11261", "trainer": "محمد علي عسيري", "room": "301", "committee": "1", "count": "20", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "محاسبة منشآت مالية (محسب 251)", "section": "11270", "trainer": "عبد السلام عبدالله القحطاني", "room": "305", "committee": "5", "count": "19", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "محاسبة منشآت مالية (محسب 251)", "section": "11275", "trainer": "عبد السلام عبدالله القحطاني", "room": "306", "committee": "6", "count": "17", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "موضوعات مختارة إدارة (إدار 285)", "section": "11331", "trainer": "محمد علي عسيري", "room": "302", "committee": "2", "count": "21", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "07/06/2026", "day": "الأحد 07/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "موضوعات مختارة إدارة (إدار 285)", "section": "11346", "trainer": "محمد علي عسيري", "room": "303", "committee": "3", "count": "16", "hijri": "21 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الوقت (إدار 241)", "section": "11248", "trainer": "ظافر محمد الشمراني", "room": "303", "committee": "3", "count": "23", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة حكومية (محسب 131)", "section": "11250", "trainer": "عبدالله سعيد القحطاني", "room": "305", "committee": "5", "count": "21", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة حكومية (محسب 131)", "section": "11256", "trainer": "عبدالله سعيد القحطاني", "room": "305", "committee": "6", "count": "13", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة حكومية (محسب 131)", "section": "11258", "trainer": "عبدالله سعيد القحطاني", "room": "306", "committee": "6", "count": "19", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الوقت (إدار 241)", "section": "11306", "trainer": "ظافر محمد الشمراني", "room": "302", "committee": "2", "count": "29", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الوقت (إدار 241)", "section": "11329", "trainer": "ظافر محمد الشمراني", "room": "301", "committee": "1", "count": "31", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الوقت (إدار 241)", "section": "11330", "trainer": "ظافر محمد الشمراني", "room": "304", "committee": "4", "count": "25", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة حكومية (محسب 131)", "section": "68436", "trainer": "الحسين سالم آل عثمان", "room": "308", "committee": "7", "count": "24", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "لغة انجليزية (انجل 111)", "section": "-", "trainer": "-", "room": "مبنى 14", "committee": "-", "count": "-", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "08/06/2026", "day": "الاثنين 08/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "لغة انجليزية (انجل 113)", "section": "-", "trainer": "-", "room": "مبنى 14", "committee": "-", "count": "-", "hijri": "22 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11217", "trainer": "ظافر عبدالله الشهري", "room": "303", "committee": "3", "count": "20", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11219", "trainer": "ظافر عبدالله الشهري", "room": "302", "committee": "2", "count": "19", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11220", "trainer": "ظافر عبدالله الشهري", "room": "301", "committee": "1", "count": "13", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11223", "trainer": "سعيد عبدالرحمن الشهري", "room": "306", "committee": "6", "count": "17", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11229", "trainer": "ظافر عبدالله الشهري", "room": "302", "committee": "2", "count": "15", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11231", "trainer": "ظافر عبدالله الشهري", "room": "303", "committee": "3", "count": "15", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11237", "trainer": "ظافر عبدالله الشهري", "room": "301", "committee": "1", "count": "21", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11243", "trainer": "سعيد عبدالرحمن الشهري", "room": "304", "committee": "4", "count": "13", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11352", "trainer": "سعيد عبدالرحمن الشهري", "room": "305", "committee": "5", "count": "18", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11356", "trainer": "سعيد عبدالرحمن الشهري", "room": "305", "committee": "5", "count": "10", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11357", "trainer": "سعيد عبدالرحمن الشهري", "room": "306", "committee": "6", "count": "8", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الاقتصاد (اقصد 101)", "section": "11358", "trainer": "سعيد عبدالرحمن الشهري", "room": "304", "committee": "4", "count": "17", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "ريادة الأعمال في المجال المالي (رياد 266)", "section": "11406", "trainer": "عبدالله يحيى آل فائع", "room": "308", "committee": "7", "count": "21", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "ريادة الأعمال في المجال المالي (رياد 266)", "section": "11410", "trainer": "عبدالله يحيى آل فائع", "room": "309", "committee": "8", "count": "21", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "09/06/2026", "day": "الثلاثاء 09/06/2026", "period": "2", "period_time": "08:00 - 10:00", "course": "دراسات اسلامية (اسلم 101)", "section": "-", "trainer": "-", "room": "مبنى 14", "committee": "-", "count": "-", "hijri": "23 ذو الحجة 1447هـ", "day_name": "الثلاثاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة الزكاة والدخل (محسب 261)", "section": "11287", "trainer": "عبدالعزيز هادي القحطاني", "room": "302", "committee": "2", "count": "16", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة الزكاة والدخل (محسب 261)", "section": "11293", "trainer": "كليب احمد الزهراني", "room": "301", "committee": "1", "count": "17", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة الزكاة والدخل (محسب 261)", "section": "11302", "trainer": "عبدالعزيز هادي القحطاني", "room": "302", "committee": "2", "count": "14", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "ريادة الأعمال في مجال الإدارة (رياد 262)", "section": "11400", "trainer": "حسن مانع آل عمير", "room": "304", "committee": "4", "count": "28", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "ريادة الأعمال في مجال الإدارة (رياد 262)", "section": "11402", "trainer": "عبدالرحمن عبدالله الرعيني", "room": "305", "committee": "5", "count": "23", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "ريادة الأعمال في مجال الإدارة (رياد 262)", "section": "11404", "trainer": "حسن مانع آل عمير", "room": "303", "committee": "3", "count": "23", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "رياضيات (رياض 101)", "section": "-", "trainer": "-", "room": "مبنى 14", "committee": "-", "count": "-", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "محاسبة باللغة الإنجليزية (محسب 275)", "section": "11289", "trainer": "علي محمد آل موسى", "room": "303", "committee": "2", "count": "24", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "محاسبة باللغة الإنجليزية (محسب 275)", "section": "11292", "trainer": "علي محمد آل موسى", "room": "301", "committee": "1", "count": "19", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "محاسبة باللغة الإنجليزية (محسب 275)", "section": "11304", "trainer": "علي محمد آل موسى", "room": "301", "committee": "1", "count": "15", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "10/06/2026", "day": "الأربعاء 10/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "لغة انجليزية (انجل 112)", "section": "-", "trainer": "-", "room": "مبنى 14", "committee": "-", "count": "-", "hijri": "24 ذو الحجة 1447هـ", "day_name": "الأربعاء"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الإحصاء (احصا 101)", "section": "10435", "trainer": "خالد مداوي القحطاني", "room": "303", "committee": "3", "count": "22", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الإحصاء (احصا 101)", "section": "10438", "trainer": "خالد مداوي القحطاني", "room": "301", "committee": "1", "count": "17", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الإحصاء (احصا 101)", "section": "10439", "trainer": "خالد مداوي القحطاني", "room": "304", "committee": "4", "count": "26", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الإحصاء (احصا 101)", "section": "10444", "trainer": "خالد مداوي القحطاني", "room": "301", "committee": "1", "count": "14", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الإحصاء (احصا 101)", "section": "10451", "trainer": "خالد مداوي القحطاني", "room": "302", "committee": "2", "count": "24", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الإحصاء (احصا 101)", "section": "10467", "trainer": "خالد مداوي القحطاني", "room": "305", "committee": "5", "count": "24", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مقدمة في الإحصاء (احصا 101)", "section": "10474", "trainer": "خالد مداوي القحطاني", "room": "306", "committee": "6", "count": "21", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "إدارة وتقنيات المكاتب (إدار 121)", "section": "11240", "trainer": "محمد جبران آل سفران", "room": "301", "committee": "1", "count": "18", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "إدارة وتقنيات المكاتب (إدار 121)", "section": "11267", "trainer": "فيصل محمد القرني", "room": "302", "committee": "2", "count": "18", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "إدارة وتقنيات المكاتب (إدار 121)", "section": "11320", "trainer": "عبدالرحمن سعيد آل حمحوم", "room": "301", "committee": "1", "count": "12", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "إدارة وتقنيات المكاتب (إدار 121)", "section": "11336", "trainer": "عبدالرحمن سعيد آل حمحوم", "room": "302", "committee": "2", "count": "17", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "11/06/2026", "day": "الخميس 11/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "كتابة فنية (عربي 101)", "section": "-", "trainer": "-", "room": "مبنى 14", "committee": "-", "count": "-", "hijri": "25 ذو الحجة 1447هـ", "day_name": "الخميس"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "الاتصالات الإدارية (إدار 111)", "section": "11224", "trainer": "تركي أحمد عسيري", "room": "310", "committee": "9", "count": "21", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ المحاسبة", "section": "11226", "trainer": "حسن احمد السيد", "room": "303", "committee": "3", "count": "15", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ المحاسبة", "section": "11232", "trainer": "حسن احمد السيد", "room": "303", "committee": "3", "count": "14", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ المحاسبة", "section": "11241", "trainer": "حسن احمد السيد", "room": "302", "committee": "2", "count": "21", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ المحاسبة", "section": "11244", "trainer": "حسن احمد السيد", "room": "301", "committee": "2", "count": "12", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة متوسطة - 1 (محسب 111)", "section": "11249", "trainer": "خالد عبد الله آل محمد بن سعيد", "room": "304", "committee": "4", "count": "22", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة متوسطة - 1 (محسب 111)", "section": "11255", "trainer": "خالد عبد الله آل محمد بن سعيد", "room": "305", "committee": "6", "count": "17", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة متوسطة - 1 (محسب 111)", "section": "11257", "trainer": "خالد عبد الله آل محمد بن سعيد", "room": "305", "committee": "5", "count": "19", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "الاتصالات الإدارية (إدار 111)", "section": "11263", "trainer": "يحيى محمد عسيري", "room": "309", "committee": "8", "count": "22", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة متوسطة - 2 (محسب 212)", "section": "11269", "trainer": "علي محمد عسيري", "room": "308", "committee": "7", "count": "24", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة متوسطة - 2 (محسب 212)", "section": "11279", "trainer": "علي محمد عسيري", "room": "306", "committee": "7", "count": "11", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة متوسطة - 2 (محسب 212)", "section": "11286", "trainer": "علي محمد عسيري", "room": "306", "committee": "6", "count": "15", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "الاتصالات الإدارية (إدار 111)", "section": "11318", "trainer": "تركي أحمد عسيري", "room": "311", "committee": "10", "count": "25", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "الاتصالات الإدارية (إدار 111)", "section": "11332", "trainer": "يحيى محمد عسيري", "room": "309", "committee": "8", "count": "14", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "مبادئ المحاسبة", "section": "11359", "trainer": "علي محمد عسيري", "room": "301", "committee": "1", "count": "15", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "اساسيات ريادة الأعمال (رياد 101)", "section": "10548", "trainer": "عضوان سعيد الأحمري", "room": "304", "committee": "4", "count": "19", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "اساسيات ريادة الأعمال (رياد 101)", "section": "10549", "trainer": "عضوان سعيد الأحمري", "room": "305", "committee": "5", "count": "21", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "اساسيات ريادة الأعمال (رياد 101)", "section": "10550", "trainer": "حسن مانع آل عمير", "room": "306", "committee": "6", "count": "27", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "اساسيات ريادة الأعمال (رياد 101)", "section": "10551", "trainer": "محمد علي عسيري", "room": "301", "committee": "1", "count": "21", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "اساسيات ريادة الأعمال (رياد 101)", "section": "10553", "trainer": "كليب احمد الزهراني", "room": "308", "committee": "7", "count": "26", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "اساسيات ريادة الأعمال (رياد 101)", "section": "10554", "trainer": "كليب احمد الزهراني", "room": "302", "committee": "2", "count": "20", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "اساسيات ريادة الأعمال (رياد 101)", "section": "10555", "trainer": "الحسين سالم آل عثمان", "room": "303", "committee": "3", "count": "22", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "موضوعات مختارة (محاسبة) (محسب 285)", "section": "11291", "trainer": "علي محمد آل موسى", "room": "309", "committee": "8", "count": "29", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "موضوعات مختارة (محاسبة) (محسب 285)", "section": "11296", "trainer": "علي محمد آل موسى", "room": "310", "committee": "9", "count": "27", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "إدارة الموارد البشرية (إدار 231)", "section": "11312", "trainer": "عضوان سعيد الأحمري", "room": "312", "committee": "11", "count": "21", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "14/06/2026", "day": "الأحد 14/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "إدارة الموارد البشرية (إدار 231)", "section": "11317", "trainer": "عضوان سعيد الأحمري", "room": "311", "committee": "10", "count": "23", "hijri": "28 ذو الحجة 1447هـ", "day_name": "الأحد"}, {"date": "15/06/2026", "day": "الاثنين 15/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الجودة الشاملة (ادار 271)", "section": "11251", "trainer": "إبراهيم سعيد الشهراني", "room": "305", "committee": "5", "count": "19", "hijri": "29 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "15/06/2026", "day": "الاثنين 15/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الجودة الشاملة (ادار 271)", "section": "11259", "trainer": "عبدالرحمن عبدالله الرعيني", "room": "304", "committee": "4", "count": "25", "hijri": "29 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "15/06/2026", "day": "الاثنين 15/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة التكاليف (محسب 241)", "section": "11266", "trainer": "كليب احمد الزهراني", "room": "301", "committee": "1", "count": "12", "hijri": "29 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "15/06/2026", "day": "الاثنين 15/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "محاسبة التكاليف (محسب 241)", "section": "11283", "trainer": "كليب احمد الزهراني", "room": "301", "committee": "1", "count": "18", "hijri": "29 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "15/06/2026", "day": "الاثنين 15/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الجودة الشاملة (ادار 271)", "section": "11327", "trainer": "عبدالرحمن عبدالله الرعيني", "room": "303", "committee": "3", "count": "21", "hijri": "29 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "15/06/2026", "day": "الاثنين 15/06/2026", "period": "1", "period_time": "08:00 - 10:00", "course": "إدارة الجودة الشاملة (ادار 271)", "section": "11345", "trainer": "إبراهيم سعيد الشهراني", "room": "302", "committee": "2", "count": "23", "hijri": "29 ذو الحجة 1447هـ", "day_name": "الاثنين"}, {"date": "15/06/2026", "day": "الاثنين 15/06/2026", "period": "2", "period_time": "10:30 - 12:30", "course": "سلوك وظيفي (اسلك 201)", "section": "-", "trainer": "-", "room": "مبنى 14", "committee": "-", "count": "-", "hijri": "29 ذو الحجة 1447هـ", "day_name": "الاثنين"}];
 
 const HIJRI = {
   '07/06/2026':'21 ذو الحجة 1447هـ',
@@ -340,10 +577,23 @@ function norm(s){
     .replace(/\s+/g,' ').trim();
 }
 
+/* ─── ROOM SORT KEY ─────────────────────────────────── */
+function roomKey(r){
+  const n = parseInt(r.room);
+  return isNaN(n) ? 9999 : n;
+}
+
+/* ─── DATE SORT KEY ─────────────────────────────────── */
+function dateKey(d){
+  // dd/mm/yyyy → yyyymmdd
+  const p = d.split('/');
+  return p[2]+p[1]+p[0];
+}
+
 /* ─── FILTER ────────────────────────────────────────── */
 function filtered(){
   const q = norm(document.getElementById('srch').value);
-  return D.filter(r=>{
+  let rows = D.filter(r=>{
     if(fDay    && r.date !== fDay)     return false;
     if(fPer    && r.period !== fPer)   return false;
     if(fCourse && r.course !== fCourse)return false;
@@ -353,6 +603,15 @@ function filtered(){
     }
     return true;
   });
+  /* ── Sort: date → period → room number ── */
+  rows.sort((a,b)=>{
+    const dd = dateKey(a.date).localeCompare(dateKey(b.date));
+    if(dd !== 0) return dd;
+    const pd = a.period.localeCompare(b.period);
+    if(pd !== 0) return pd;
+    return roomKey(a) - roomKey(b);
+  });
+  return rows;
 }
 
 /* ─── RENDER ────────────────────────────────────────── */
@@ -403,7 +662,6 @@ function setDay(d){
   fDay = (fDay===d) ? null : d;
   document.querySelectorAll('.day-pill').forEach(el=>
     el.classList.toggle('active', el.dataset.day===fDay));
-  // toggle "كل الأيام" pill
   const allPill = document.querySelector('#dayPills .pill:first-child');
   if(allPill) allPill.classList.toggle('active',!fDay);
   applyF();
@@ -428,14 +686,12 @@ function resetF(){
 
 /* ─── PRINT ─────────────────────────────────────────── */
 function doPrint(){
-  // Build print header based on current filters
   let desc = [];
   if(fDay)    desc.push(HIJRI[fDay] + ' | ' + fDay + 'م');
   if(fPer)    desc.push(fPer==='1'?'الفترة الأولى (08:00–10:00)':'الفترة الثانية (10:30–12:30)');
   if(fCourse) desc.push('مادة: ' + fCourse);
   const q = document.getElementById('srch').value;
   if(q)       desc.push('بحث: ' + q);
-
   const rows = filtered();
   const hdr  = document.getElementById('printHdr');
   hdr.innerHTML = `
@@ -453,8 +709,316 @@ document.getElementById('csel').addEventListener('change',e=>{
   applyF();
 });
 
+/* ═══════════════════════════════════════════════════════
+   STUDENT SCHEDULE BUILDER — v2 (with section picker)
+   ═══════════════════════════════════════════════════════ */
+
+/* State */
+let chosenCourses = new Set();
+let chosenSections = {};   // { courseName: rowObject }
+
+/* Helpers */
+function roomKey(r){ const n=parseInt(r.room); return isNaN(n)?9999:n; }
+function dateKey(d){ const p=d.split('/'); return p[2]+p[1]+p[0]; }
+
+/* Get unique courses sorted by exam date */
+function getUniqueCourses(){
+  const map = new Map();
+  D.forEach(r=>{
+    if(!map.has(r.course)) map.set(r.course,r);
+  });
+  return [...map.values()].sort((a,b)=>{
+    const dd=dateKey(a.date).localeCompare(dateKey(b.date));
+    return dd!==0?dd:a.period.localeCompare(b.period);
+  });
+}
+
+/* Get sections for a course, sorted by room */
+function getSections(courseName){
+  return D.filter(r=>r.course===courseName)
+    .sort((a,b)=>roomKey(a)-roomKey(b));
+}
+
+/* Init: build course pills */
+function initBuilder(){
+  const courses = getUniqueCourses();
+  const pills = document.getElementById('coursePills');
+  pills.innerHTML='';
+  courses.forEach(c=>{
+    const btn = document.createElement('button');
+    btn.className='cpill';
+    btn.dataset.course = c.course;
+    // show exam day + period info in tooltip
+    const perLabel = c.period==='1'?'ف١ 08:00–10:00':'ف٢ 10:30–12:30';
+    btn.title = `${c.day_name} ${c.date} | ${perLabel}`;
+    btn.innerHTML = c.course;
+    btn.onclick = ()=>toggleCourse(c.course, btn);
+    pills.appendChild(btn);
+  });
+}
+
+function toggleCourse(name, btn){
+  if(chosenCourses.has(name)){
+    chosenCourses.delete(name);
+    delete chosenSections[name];
+    btn.classList.remove('chosen');
+  } else {
+    chosenCourses.add(name);
+    btn.classList.add('chosen');
+  }
+  refreshSectionPickers();
+  updateCounter();
+}
+
+function clearAllCourses(){
+  chosenCourses.clear();
+  chosenSections={};
+  document.querySelectorAll('.cpill').forEach(b=>b.classList.remove('chosen'));
+  refreshSectionPickers();
+  updateCounter();
+  document.getElementById('personalSched').classList.remove('show');
+}
+
+function updateCounter(){
+  document.getElementById('selCount').textContent = chosenCourses.size;
+  document.getElementById('secCount').textContent = Object.keys(chosenSections).length;
+}
+
+/* Build section pickers for all chosen courses */
+function refreshSectionPickers(){
+  const step = document.getElementById('sectionStep');
+  const container = document.getElementById('sectionPickers');
+
+  if(chosenCourses.size===0){
+    step.style.display='none';
+    container.innerHTML='';
+    return;
+  }
+  step.style.display='block';
+
+  // Sort chosen courses by date
+  const courseList = [...chosenCourses].sort((a,b)=>{
+    const ra=D.find(r=>r.course===a);
+    const rb=D.find(r=>r.course===b);
+    if(!ra||!rb) return 0;
+    const dd=dateKey(ra.date).localeCompare(dateKey(rb.date));
+    return dd!==0?dd:ra.period.localeCompare(rb.period);
+  });
+
+  container.innerHTML='';
+  courseList.forEach(courseName=>{
+    const sections = getSections(courseName);
+    const courseRef = sections[0];
+    const perLabel = courseRef.period==='1'
+      ?'الفترة الأولى  08:00–10:00'
+      :'الفترة الثانية  10:30–12:30';
+    const dayTag = `${courseRef.day_name} ${courseRef.date.replace('/2026','')}م | ${perLabel}`;
+
+    const card = document.createElement('div');
+    card.className='sec-card';
+
+    let optionsHtml='';
+    if(sections.length===1 && sections[0].section==='-'){
+      // Single unnamed section (e.g. مبنى 14 courses)
+      optionsHtml=`<label class="sec-opt" id="secopt_${courseName.replace(/\s/g,'_')}_0" onclick="pickSection('${escQ(courseName)}',0)">
+        <input type="radio" name="sec_${escQ(courseName)}" value="0" ${chosenSections[courseName]?'checked':''}>
+        <div class="sec-opt-info">
+          <span class="sec-num">— مادة مركزية</span>
+          <span class="sec-meta"><span class="sec-room">📍 ${sections[0].room}</span></span>
+        </div>
+      </label>`;
+    } else {
+      sections.forEach((sec,i)=>{
+        const isChosen = chosenSections[courseName] && chosenSections[courseName].section===sec.section;
+        optionsHtml+=`<label class="sec-opt${isChosen?' selected':''}" id="secopt_${escId(courseName)}_${i}" onclick="pickSection('${escQ(courseName)}',${i})">
+          <input type="radio" name="sec_${escId(courseName)}" value="${i}" ${isChosen?'checked':''}>
+          <div class="sec-opt-info">
+            <span class="sec-num">شعبة ${sec.section}</span>
+            <span class="sec-meta">${sec.trainer} &nbsp;|&nbsp; <span class="sec-room">قاعة ${sec.room}</span></span>
+          </div>
+        </label>`;
+      });
+    }
+
+    card.innerHTML=`
+      <div class="sec-card-hdr">
+        📚 ${courseName}
+        <span class="day-tag">📅 ${dayTag}</span>
+      </div>
+      <div class="sec-options" id="sopts_${escId(courseName)}">${optionsHtml}</div>`;
+    container.appendChild(card);
+  });
+}
+
+function escQ(s){ return s.replace(/'/g,"\\'"); }
+function escId(s){ return s.replace(/[^a-zA-Z0-9\u0600-\u06FF]/g,'_'); }
+
+function pickSection(courseName, idx){
+  const sections = getSections(courseName);
+  chosenSections[courseName] = sections[idx];
+  // Update visual state of options in this card
+  const container = document.getElementById('sopts_'+escId(courseName));
+  if(container){
+    container.querySelectorAll('.sec-opt').forEach((el,i)=>{
+      el.classList.toggle('selected', i===idx);
+    });
+  }
+  updateCounter();
+}
+
+/* Build personal schedule */
+function buildPersonalSched(){
+  if(chosenCourses.size===0){ alert('يرجى اختيار مادة واحدة على الأقل'); return; }
+
+  // Check all chosen courses have a section selected
+  const missing = [...chosenCourses].filter(c=>!chosenSections[c]);
+  if(missing.length){
+    alert('يرجى اختيار الشعبة للمواد التالية:\n' + missing.join('\n'));
+    return;
+  }
+
+  // Sort by date then period
+  const rows = Object.values(chosenSections).sort((a,b)=>{
+    const dd=dateKey(a.date).localeCompare(dateKey(b.date));
+    return dd!==0?dd:a.period.localeCompare(b.period);
+  });
+
+  // Conflict check
+  const slotMap={};
+  rows.forEach(r=>{ const k=r.date+'_'+r.period; (slotMap[k]=slotMap[k]||[]).push(r.course); });
+  const conflicts = Object.values(slotMap).filter(a=>a.length>1);
+  document.getElementById('conflictWarn').innerHTML = conflicts.length
+    ? conflicts.map(arr=>`<div class="conflict-warn">⚠️ تعارض في موعد الاختبار: ${arr.join(' ← ')}</div>`).join('')
+    : '';
+
+  // Build schedule card
+  const totalCourses = rows.length;
+  const totalDays = new Set(rows.map(r=>r.date)).size;
+
+  let tableRows='';
+  rows.forEach((r,i)=>{
+    const perClass = r.period==='1'?'td-per1':'td-per2';
+    const perText  = r.period==='1'?'الفترة الأولى':'الفترة الثانية';
+    const perTime  = r.period_time || (r.period==='1'?'08:00–10:00':'10:30–12:30');
+    const secDisp  = r.section==='-'?'—':r.section;
+    const roomDisp = r.room;
+    tableRows+=`<tr>
+      <td style="color:#888;font-size:.72rem">${i+1}</td>
+      <td class="td-crs">${r.course}</td>
+      <td style="font-weight:700">${secDisp}</td>
+      <td><strong>${r.day_name}</strong> ${r.date.replace('/2026','')}م</td>
+      <td style="font-size:.68rem;color:#666">${r.hijri}</td>
+      <td class="${perClass}">${perText}<br><small style="font-weight:400">${perTime}</small></td>
+      <td class="td-rm">${roomDisp}</td>
+      <td style="font-size:.72rem;color:#555">${r.trainer!=='-'?r.trainer:'—'}</td>
+    </tr>`;
+  });
+
+  document.getElementById('schedCard').innerHTML=`
+<div class="sc-hdr">
+  <h3>المؤسسة العامة للتدريب التقني والمهني | الكلية التقنية بأبها</h3>
+  <p>قسم تقنية الأعمال — جدول الاختبارات النهائية الشخصي | الفصل الثاني 1447هـ</p>
+</div>
+<div class="sc-body">
+<table class="sc-table">
+  <thead>
+    <tr>
+      <th>#</th><th>المادة</th><th>رقم الشعبة</th>
+      <th>اليوم والتاريخ</th><th>التاريخ الهجري</th>
+      <th>الفترة والوقت</th><th>رقم القاعة</th><th>اسم المدرب</th>
+    </tr>
+  </thead>
+  <tbody>${tableRows}</tbody>
+</table>
+</div>
+<div class="sc-foot">
+  عدد المواد: ${totalCourses} | عدد أيام الاختبار: ${totalDays}
+  &nbsp;|&nbsp; إعداد أ. كليب بن أحمد ضيف الله الزهراني
+</div>`;
+
+  document.getElementById('psInfo').innerHTML=
+    `<strong>${totalCourses}</strong> مادة في <strong>${totalDays}</strong> يوم اختبار`;
+
+  const ps = document.getElementById('personalSched');
+  ps.classList.add('show');
+  setTimeout(()=>ps.scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+/* ─── PRINT ─── */
+function printPersonal(){
+  const card = document.getElementById('schedCard');
+  if(!card.innerHTML){ alert('يرجى بناء الجدول أولاً'); return; }
+  const hdr = document.getElementById('printHdr');
+  hdr.innerHTML=`<strong>المؤسسة العامة للتدريب التقني والمهني | الكلية التقنية بأبها</strong><br>
+    <strong>قسم تقنية الأعمال — جدول الاختبارات النهائية الشخصي | الفصل الثاني 1447هـ</strong>`;
+  // Clone card into a print-only div
+  const printDiv = document.createElement('div');
+  printDiv.id='_printDiv';
+  printDiv.style.cssText='position:fixed;top:0;right:0;width:100%;z-index:9999;background:#fff;direction:rtl';
+  printDiv.innerHTML=card.innerHTML;
+  document.body.appendChild(printDiv);
+  // Hide rest
+  document.body.classList.add('print-personal-mode');
+  const style=document.createElement('style');
+  style.id='_ps_style';
+  style.textContent='@media print{body>*:not(#_printDiv):not(#printHdr){display:none!important}#_printDiv{display:block!important}}';
+  document.head.appendChild(style);
+  window.print();
+  document.body.removeChild(printDiv);
+  document.getElementById('_ps_style').remove();
+}
+
+/* ─── EXPORT IMAGE ─── */
+async function exportImage(){
+  const card = document.getElementById('schedCard');
+  if(!card.innerHTML){ alert('يرجى بناء الجدول أولاً'); return; }
+  try{
+    const canvas = await html2canvas(card,{
+      scale:2, useCORS:true, allowTaint:true,
+      backgroundColor:'#ffffff', logging:false
+    });
+    const link=document.createElement('a');
+    link.download='جدول_اختباراتي.png';
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+  }catch(e){ alert('خطأ في التصدير: '+e.message); }
+}
+
+/* ─── EXPORT PDF ─── */
+async function exportPDF(){
+  const card = document.getElementById('schedCard');
+  if(!card.innerHTML){ alert('يرجى بناء الجدول أولاً'); return; }
+  try{
+    const canvas = await html2canvas(card,{
+      scale:2, useCORS:true, allowTaint:true,
+      backgroundColor:'#ffffff', logging:false
+    });
+    const imgData = canvas.toDataURL('image/png');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation:'landscape', unit:'mm', format:'a4' });
+    const pdfW = pdf.internal.pageSize.getWidth();
+    const pdfH = pdf.internal.pageSize.getHeight();
+    const ratio = Math.min(pdfW/canvas.width, pdfH/canvas.height);
+    const imgW = canvas.width * ratio;
+    const imgH = canvas.height * ratio;
+    const x = (pdfW - imgW) / 2;
+    const y = (pdfH - imgH) / 2;
+    pdf.addImage(imgData,'PNG',x,y,imgW,imgH);
+    pdf.save('جدول_اختباراتي.pdf');
+  }catch(e){ alert('خطأ في تصدير PDF: '+e.message); }
+}
+
+/* ─── TOGGLE BUILDER ─── */
+function toggleBuilder(){
+  document.getElementById('builderToggle').classList.toggle('open');
+  document.getElementById('builderBody').classList.toggle('open');
+}
+
 /* ─── INIT ──────────────────────────────────────────── */
-render(D);
+
+/* ─── INIT ──────────────────────────────────────────── */
+initBuilder();
+render(filtered());
 </script>
 </body>
 </html>
